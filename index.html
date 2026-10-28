@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Galerie d'Art • Interactive 3D Museum Experience</title>
+    <meta name="description" content="Explore a 3D architectural virtual museum featuring classical galleries, sculptures, and modern light pavilions built with Vite and Babylon.js." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="canvas-container">
+      <canvas id="renderCanvas"></canvas>
+    </div>
+
+    <!-- Click-to-Start / Pointer Lock Prompt (dismissed on first lock) -->
+    <div id="click-to-start" class="click-to-start">
+      <div class="click-to-start-icon">🖱️</div>
+      <h2>Click to Enter Museum</h2>
+      <p>Hold left mouse button &amp; drag to look around · WASD to move</p>
+    </div>
+
+    <div class="vignette"></div>
+
+    <main id="ui-overlay">
+      <!-- Top Navigation Header -->
+      <header class="top-bar">
+        <div class="brand-badge">
+          <div class="brand-icon">M</div>
+          <div class="brand-text">
+            <h1>Galerie d'Art</h1>
+            <p>Virtual Museum</p>
+          </div>
+        </div>
+
+        <nav class="room-indicator-box" aria-label="Museum Wings">
+          <div class="room-nav-pills">
+            <div class="room-pill active" id="pill-1" title="Room 1: The Grand Vestibule">I</div>
+            <div class="room-pill" id="pill-2" title="Room 2: Central Rotunda">II</div>
+            <div class="room-pill" id="pill-3" title="Room 3: Lumina Pavilion">III</div>
+          </div>
+          <span class="current-room-label" id="room-label">Room 1: The Grand Vestibule</span>
+        </nav>
+      </header>
+
+      <!-- Dynamic Exhibit Proximity Placard -->
+      <section class="exhibit-card" id="exhibit-card" aria-live="polite">
+        <div class="exhibit-header">
+          <span class="exhibit-wing" id="exhibit-wing">Room 1: The Grand Vestibule</span>
+          <span class="exhibit-year" id="exhibit-year">1932</span>
+        </div>
+        <h2 class="exhibit-title" id="exhibit-title">Harmonia Polyhedrica</h2>
+        <div class="exhibit-artist" id="exhibit-artist">Marcus Bennett</div>
+        <p class="exhibit-desc" id="exhibit-desc">Hand-chiseled bronze and 24-karat gold leaf polyhedral lattice exploring symmetrical cosmic geometries.</p>
+      </section>
+
+      <!-- Bottom Interactive HUD -->
+      <footer class="bottom-bar">
+        <!-- Controls Helper -->
+        <div class="controls-card">
+          <div class="controls-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            Character Controls
+          </div>
+          <div class="wasd-cluster">
+            <div class="key-cap" id="key-w">W</div>
+            <div class="wasd-row">
+              <div class="key-cap" id="key-a">A</div>
+              <div class="key-cap" id="key-s">S</div>
+              <div class="key-cap" id="key-d">D</div>
+            </div>
+          </div>
+          <div class="controls-grid">
+            <div class="control-hint">
+              <span>Move Character</span>
+              <span class="key-badge">WASD / Arrows</span>
+            </div>
+            <div class="control-hint">
+              <span>Sprint</span>
+              <span class="key-badge" id="key-shift">Shift</span>
+            </div>
+            <div class="control-hint">
+              <span>Jump</span>
+              <span class="key-badge">Space</span>
+            </div>
+            <div class="control-hint">
+              <span>Orbit Camera</span>
+              <span class="key-badge">Mouse Drag</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn-action" id="btn-next-room" type="button" title="Walk to next room">
+            <span>Next Wing</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+          <button class="btn-action" id="btn-reset" type="button" title="Reset Character Position">
+            <span>Reset Position</span>
+            <span class="key-badge">R</span>
+          </button>
+          <button class="btn-action" id="btn-audio" type="button" title="Toggle Soundscape">
+            <span id="audio-label">Ambiance: Off</span>
+          </button>
+          <button class="btn-action" id="btn-avatar" type="button" title="Switch Avatar (G)">
+            <span id="avatar-label">Avatar: Female 👩</span>
+            <span class="key-badge">G</span>
+          </button>
+          <button class="btn-action" id="btn-photo" type="button" title="Capture Photo (P)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+            <span>Photo Mode</span>
+            <span class="key-badge">P</span>
+          </button>
+          <div class="btn-action brightness-control" title="Adjust Museum Brightness">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <span>Brightness</span>
+            <input type="range" id="brightness-slider" min="0.6" max="1.6" step="0.05" value="1.05" aria-label="Museum Exposure Slider" />
+            <span id="brightness-val" class="key-badge">1.05</span>
+          </div>
+          <div class="btn-action camera-control" title="Third-Person Camera (Fixed 2.0m Distance)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6"></path>
+              <path d="M9 21H3v-6"></path>
+              <path d="M21 3l-7 7"></path>
+              <path d="M3 21l7-7"></path>
+            </svg>
+            <span>Camera</span>
+            <span id="camera-distance-val" class="key-badge">2.0m</span>
+          </div>
+        </div>
+      <!-- Click to Inspect Proximity Tooltip -->
+      <div id="click-prompt" class="click-prompt">
+        <span>✦ Click frame to zoom in</span>
+      </div>
+    </main>
+
+    <!-- Crosshair (visible only when pointer is locked) -->
+    <div id="crosshair" class="crosshair" aria-hidden="true">
+      <div class="crosshair-h"></div>
+      <div class="crosshair-v"></div>
+    </div>
+
+    <!-- Pause Menu Overlay -->
+    <div id="pause-menu" class="pause-menu" aria-hidden="true">
+      <div class="pause-backdrop"></div>
+      <div class="pause-panel" role="dialog" aria-modal="true" aria-label="Pause Menu">
+        <div class="pause-logo">
+          <div class="pause-logo-icon">M</div>
+          <span class="pause-logo-text">Galerie d'Art</span>
+        </div>
+        <h2 class="pause-title">Paused</h2>
+        <p class="pause-subtitle">Game is paused — take a breather</p>
+        <div class="pause-buttons">
+          <button class="pause-btn pause-btn-primary" id="btn-pause-resume" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            Resume
+          </button>
+          <button class="pause-btn" id="btn-pause-settings" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            Settings
+          </button>
+          <button class="pause-btn pause-btn-danger" id="btn-pause-quit" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            Quit to Desktop
+          </button>
+        </div>
+        <p class="pause-hint">Press <kbd>Esc</kbd> to resume</p>
+      </div>
+    </div>
+
+    <!-- Camera Shutter Flash Overlay -->
+    <div id="shutter-flash" class="shutter-flash"></div>
+
+    <!-- Photo Mode Captured Thumbnail Preview in Corner -->
+    <aside id="photo-preview-card" class="photo-preview-card" aria-hidden="true">
+      <div class="photo-preview-inner">
+        <div class="photo-preview-thumb">
+          <img id="photo-preview-img" src="" alt="Captured Museum Photo" />
+        </div>
+        <div class="photo-preview-meta">
+          <div class="photo-preview-tag">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Photo Captured</span>
+          </div>
+          <p class="photo-preview-filename">museum-photo.png</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Fullscreen Zoom-In Inspection Modal -->
+    <div class="inspect-overlay" id="inspect-modal" aria-hidden="true">
+      <div class="inspect-backdrop" id="inspect-backdrop" title="Click to close"></div>
+      <article class="inspect-panel">
+        <button class="inspect-close-btn" id="btn-close-inspect" type="button" title="Close inspection (Esc)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <div class="inspect-badge-row">
+          <span class="inspect-wing-badge" id="inspect-location">Room 1 • West Wall</span>
+          <span class="inspect-year-badge" id="inspect-year">2024</span>
+        </div>
+
+        <h2 class="inspect-title" id="inspect-title">Artwork Title</h2>
+        <div class="inspect-artist" id="inspect-artist">Artist Name</div>
+
+        <div class="inspect-image-frame">
+          <img id="inspect-img" src="" alt="Artwork inspection preview" />
+        </div>
+
+        <div class="inspect-caption-box">
+          <h3 class="inspect-caption-heading">Curator Caption</h3>
+          <p class="inspect-caption" id="inspect-caption">Caption text will appear here.</p>
+        </div>
+
+        <div class="inspect-footer-hint">
+          <span>Press <kbd>Esc</kbd> or <kbd>WASD</kbd> to return</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- ============================================================
+         EDIT MUSEUM FEATURE OVERLAYS & CONTROLS
+         ============================================================ -->
+
+    <!-- Edit Museum Button (Bottom-Right, Always Visible) -->
+    <button id="btn-edit-museum" class="btn-edit-museum" type="button" title="Edit Museum (E)">
+      <span class="btn-edit-icon">✏️</span>
+      <span class="btn-edit-text">Edit Museum</span>
+    </button>
+
+    <!-- Edit Mode Dim Overlay -->
+    <div id="edit-mode-overlay" class="edit-mode-overlay hidden"></div>
+
+    <!-- Edit Mode Top Banner -->
+    <div id="edit-mode-banner" class="edit-mode-banner hidden">
+      <div class="edit-banner-content">
+        <span class="edit-banner-icon">🖼️</span>
+        <span class="edit-banner-text">Edit Mode — Click any photo frame to customize it</span>
+      </div>
+      <span class="edit-banner-kbd">Press <kbd>E</kbd> or click Done</span>
+    </div>
+
+    <!-- Tooltip following mouse on hovered frames in edit mode -->
+    <div id="frame-edit-tooltip" class="frame-edit-tooltip hidden">
+      <span>Click a frame to edit</span>
+    </div>
+
+    <!-- Edit Frame Side Panel (Slides in from right) -->
+    <aside id="edit-frame-panel" class="edit-frame-panel" aria-hidden="true">
+      <div class="edit-panel-header">
+        <div class="edit-panel-title-group">
+          <span class="edit-panel-badge" id="edit-panel-badge">Frame 1</span>
+          <h3 class="edit-panel-heading">Customize Frame</h3>
+        </div>
+        <button id="btn-close-edit-panel" class="edit-panel-close-btn" type="button" title="Close Panel">✕</button>
+      </div>
+
+      <div class="edit-panel-body">
+        <!-- SECTION 1: PHOTO -->
+        <div class="edit-section">
+          <div class="edit-section-header">
+            <span class="edit-section-icon">📁</span>
+            <span class="edit-section-title">Photo</span>
+          </div>
+          <div class="edit-photo-preview-wrap">
+            <div class="edit-photo-thumb-box">
+              <img id="edit-photo-thumb" class="edit-photo-thumb" src="" alt="Frame photo preview" />
+            </div>
+            <div class="edit-photo-actions">
+              <input type="file" id="edit-file-input" accept="image/*" style="display:none" />
+              <button type="button" id="btn-upload-photo" class="edit-btn edit-btn-primary">
+                <span>📁 Upload Photo</span>
+              </button>
+              <button type="button" id="btn-use-url" class="edit-btn edit-btn-secondary">
+                <span>🔗 Use URL</span>
+              </button>
+            </div>
+          </div>
+          <div id="edit-url-row" class="edit-url-row hidden">
+            <input type="text" id="edit-url-input" class="edit-text-input" placeholder="Paste image URL (https://...)" />
+            <button type="button" id="btn-apply-url" class="edit-btn edit-btn-small">Load</button>
+          </div>
+          <div id="edit-url-error" class="edit-error-msg hidden">⚠️ Could not load image. Check the URL.</div>
+        </div>
+
+        <!-- SECTION 2: ROTATE -->
+        <div class="edit-section">
+          <div class="edit-section-header">
+            <span class="edit-section-icon">🔄</span>
+            <span class="edit-section-title">Rotate</span>
+            <span class="edit-val-badge" id="edit-rotate-val">0°</span>
+          </div>
+          <div class="edit-slider-row">
+            <input type="range" id="edit-rotate-slider" min="0" max="360" step="1" value="0" class="edit-slider" />
+          </div>
+          <div class="edit-quick-buttons">
+            <button type="button" class="edit-btn-quick" id="btn-rot-left" title="Rotate 90° Left">↺ 90° Left</button>
+            <button type="button" class="edit-btn-quick" id="btn-rot-right" title="Rotate 90° Right">↻ 90° Right</button>
+            <button type="button" class="edit-btn-quick" id="btn-rot-180" title="Rotate 180°">180°</button>
+            <button type="button" class="edit-btn-quick" id="btn-rot-reset" title="Reset Rotation">Reset</button>
+          </div>
+        </div>
+
+        <!-- SECTION 3: RESIZE -->
+        <div class="edit-section">
+          <div class="edit-section-header">
+            <span class="edit-section-icon">📐</span>
+            <span class="edit-section-title">Resize</span>
+          </div>
+          <div class="edit-field-row">
+            <div class="edit-field-label">
+              <span>Width</span>
+              <span class="edit-val-badge" id="edit-width-val">1.0x</span>
+            </div>
+            <input type="range" id="edit-width-slider" min="0.5" max="4.0" step="0.1" value="1.0" class="edit-slider" />
+          </div>
+          <div class="edit-field-row">
+            <div class="edit-field-label">
+              <span>Height</span>
+              <span class="edit-val-badge" id="edit-height-val">1.0x</span>
+            </div>
+            <input type="range" id="edit-height-slider" min="0.5" max="3.0" step="0.1" value="1.0" class="edit-slider" />
+          </div>
+          <div class="edit-checkbox-row">
+            <label class="edit-checkbox-label">
+              <input type="checkbox" id="edit-lock-aspect" checked />
+              <span>Lock aspect ratio</span>
+            </label>
+            <button type="button" id="btn-resize-reset" class="edit-btn-quick">Reset Size</button>
+          </div>
+        </div>
+
+        <!-- SECTION 4: TITLE -->
+        <div class="edit-section">
+          <div class="edit-section-header">
+            <span class="edit-section-icon">🏷️</span>
+            <span class="edit-section-title">Placard Title</span>
+          </div>
+          <input type="text" id="edit-title-input" class="edit-text-input" placeholder="Artwork title shown on placard..." />
+        </div>
+
+        <!-- SAVE BUTTON -->
+        <div class="edit-save-row">
+          <button type="button" id="btn-save-frame-edit" class="edit-btn edit-btn-save">
+            <span>💾 Save Changes</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Toast notification for saved actions -->
+    <div id="edit-toast" class="edit-toast">✅ Saved!</div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,269 @@
+{
+  "doors": [
+    {
+      "id": "door-1",
+      "name": "Vestibule to Rotunda",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": -10
+      },
+      "width": 4.4,
+      "height": 3.8,
+      "thickness": 0.08,
+      "type": "swing",
+      "style": "classic",
+      "openDistance": 3.0,
+      "closeDistance": 5.0,
+      "animationDuration": 0.6,
+      "soundOpen": "/sounds/door-open.wav",
+      "soundClose": "/sounds/door-close.wav"
+    },
+    {
+      "id": "door-2",
+      "name": "Rotunda to Modern Pavilion",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 10
+      },
+      "width": 4.4,
+      "height": 3.8,
+      "thickness": 0.08,
+      "type": "swing",
+      "style": "classic",
+      "openDistance": 3.0,
+      "closeDistance": 5.0,
+      "animationDuration": 0.6,
+      "soundOpen": "/sounds/door-open.wav",
+      "soundClose": "/sounds/door-close.wav"
+    }
+  ],
+  "frames": [
+    {
+      "id": "frame-1",
+      "image": "/Diyu photos/IMG-20251210-WA0008.jpg",
+      "title": "Winter Solace",
+      "artist": "Diyu",
+      "year": "2025",
+      "caption": "A serene moment captured in soft winter light, radiating quiet warmth and gentle contemplation.",
+      "width": 2.0,
+      "height": 2.65,
+      "position": {
+        "room": 1,
+        "wall": "west",
+        "offset": -25
+      }
+    },
+    {
+      "id": "frame-2",
+      "image": "/Diyu photos/IMG-20251212-WA0017.jpg",
+      "title": "December Glow",
+      "artist": "Diyu",
+      "year": "2025",
+      "caption": "Delicate holiday atmosphere and subtle illumination highlighting quiet moments of happiness.",
+      "width": 1.25,
+      "height": 2.8,
+      "position": {
+        "room": 1,
+        "wall": "west",
+        "offset": -16
+      }
+    },
+    {
+      "id": "frame-3",
+      "image": "/Diyu photos/IMG20260101120313.jpg",
+      "title": "New Dawn",
+      "artist": "Diyu",
+      "year": "2026",
+      "caption": "Greeting the first bright morning of the new year with optimism, laughter, and open horizons.",
+      "width": 1.5,
+      "height": 2.67,
+      "position": {
+        "room": 1,
+        "wall": "south",
+        "offset": 0
+      }
+    },
+    {
+      "id": "frame-4",
+      "image": "/Diyu photos/IMG20260101175932.jpg",
+      "title": "Golden Twilight",
+      "artist": "Diyu",
+      "year": "2026",
+      "caption": "Sunset colors settling into evening hues, reflecting cherished memories and peaceful stillness.",
+      "width": 1.5,
+      "height": 2.67,
+      "position": {
+        "room": 1,
+        "wall": "east",
+        "offset": -25
+      }
+    },
+    {
+      "id": "frame-5",
+      "image": "/Diyu photos/IMG-20260124-WA0007.jpg",
+      "title": "Whispering Breezes",
+      "artist": "Diyu",
+      "year": "2026",
+      "caption": "A candid glance caught mid-conversation, full of natural elegance and spontaneous delight.",
+      "width": 1.95,
+      "height": 2.63,
+      "position": {
+        "room": 1,
+        "wall": "east",
+        "offset": -16
+      }
+    },
+    {
+      "id": "frame-6",
+      "image": "/Diyu photos/IMG20260320141426.jpg",
+      "title": "Spring Awakening",
+      "artist": "Diyu",
+      "year": "2026",
+      "caption": "Midday sun casting crisp shadows as spring blossoms begin to fill the air with life.",
+      "width": 1.5,
+      "height": 2.67,
+      "position": {
+        "room": 2,
+        "wall": "west",
+        "offset": -5.5
+      }
+    },
+    {
+      "id": "frame-7",
+      "image": "/Diyu photos/IMG20260320151758.jpg",
+      "title": "Afternoon Serenade",
+      "artist": "Diyu",
+      "year": "2026",
+      "caption": "A vibrant expression of joy and graceful ease under radiant spring daylight.",
+      "width": 3.4,
+      "height": 1.91,
+      "position": {
+        "room": 2,
+        "wall": "west",
+        "offset": 0
+      }
+    },
+    {
+      "id": "frame-8",
+      "image": "/Diyu photos/IMG20260325145956.jpg",
+      "title": "Sunlit Reverie",
+      "artist": "Diyu",
+      "year": "2026",
+      "caption": "Gentle afternoon rays framing subtle expressions and quiet inner beauty.",
+      "width": 1.5,
+      "height": 2.67,
+      "position": {
+        "room": 2,
+        "wall": "west",
+        "offset": 5.5
+      }
+    },
+    {
+      "id": "frame-9",
+      "image": "/Diyu photos/IMG-20260519-WA0029.jpg",
+      "title": "May Blossom",
+      "artist": "Diyu",
+      "year": "2026",
+      "caption": "Early summer breezes bringing vibrant color and carefree laughter to life.",
+      "width": 1.5,
+      "height": 2.67,
+      "position": {
+        "room": 2,
+        "wall": "east",
+        "offset": -3.5
+      }
+    },
+    {
+      "id": "frame-10",
+      "image": "/Diyu photos/IMG20261012003411.jpg",
+      "title": "Midnight Harmony",
+      "artist": "Diyu",
+      "year": "2026",
+      "caption": "Soft nocturnal mood bathed in ambient moonlight, intimate and deeply atmospheric.",
+      "width": 3.4,
+      "height": 1.91,
+      "position": {
+        "room": 2,
+        "wall": "east",
+        "offset": 3.5
+      }
+    },
+    {
+      "id": "frame-11",
+      "image": "/Diyu photos/IMG20261012003506.jpg",
+      "title": "Starlight Reflections",
+      "artist": "Diyu",
+      "year": "2026",
+      "caption": "Quiet night-time serenity captured with genuine warmth and gentle grace.",
+      "width": 3.4,
+      "height": 1.91,
+      "position": {
+        "room": 3,
+        "wall": "west",
+        "offset": 15.5
+      }
+    },
+    {
+      "id": "frame-12",
+      "image": "/Diyu photos/IMG_20261028_094609.png",
+      "title": "Morning Clarity",
+      "artist": "Diyu",
+      "year": "2026",
+      "caption": "A fresh autumn morning filled with radiant clarity, calm spirit, and bright confidence.",
+      "width": 2.3,
+      "height": 2.3,
+      "position": {
+        "room": 3,
+        "wall": "west",
+        "offset": 21
+      }
+    },
+    {
+      "id": "frame-13",
+      "image": "/Diyu photos/Picsart_26-10-16_22-13-33-856.png",
+      "title": "Artistic Elegance",
+      "artist": "Diyu",
+      "year": "2026",
+      "caption": "A stylized modern portrait infused with expressive artistry and delicate color tones.",
+      "width": 1.5,
+      "height": 2.67,
+      "position": {
+        "room": 3,
+        "wall": "west",
+        "offset": 26.5
+      }
+    },
+    {
+      "id": "frame-14",
+      "image": "/Diyu photos/file_0000000018248211b1d1f785de60fa40.png",
+      "title": "Eternal Radiance",
+      "artist": "Diyu",
+      "year": "2026",
+      "caption": "Capturing a timeless sparkle and effortless charm in vivid definition.",
+      "width": 2.0,
+      "height": 2.67,
+      "position": {
+        "room": 3,
+        "wall": "east",
+        "offset": 17.5
+      }
+    },
+    {
+      "id": "frame-15",
+      "image": "/Diyu photos/file_00000000db608211ad9ea0eef5038769.png",
+      "title": "Graceful Horizons",
+      "artist": "Diyu",
+      "year": "2026",
+      "caption": "Poised and radiant, celebrating cherished memories that light up every room.",
+      "width": 3.4,
+      "height": 1.91,
+      "position": {
+        "room": 3,
+        "wall": "east",
+        "offset": 24.5
+      }
+    }
+  ]
+}
